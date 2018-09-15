@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title>Elab主页控制台</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/ace-fonts.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-datepicker3.min.css}"/>
+
+    <!--Third party css-->
+    <link rel="stylesheet" th:href="@{/css/ui.jqgrid.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/jquery.gritter.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/zTree/metroStyle/metroStyle.css}"/>
+    <!--[if !IE]> -->
+    <link rel="stylesheet" th:href="@{/css/pace.min.css}"/>
+    <script data-pace-options='{ "ajax": true, "document": true, "eventLag": false, "elements": false }'
+            th:src="@{/js/pace.min.js}"></script>
+    <!--[endif]-->
+
+
+    <link rel="stylesheet" th:href="@{/css/ace.min.css}"/>
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" th:href="@{/css/ace-part2.min.css}"/>
+    <![endif]-->
+    <link rel="stylesheet" th:href="@{/css/ace-skins.min.css}"/>
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" th:href="@{/css/ace-ie.min.css}"/>
+    <![endif]-->
+
+    <!--[if lte IE 8]>
+    <script th:src="@{/js/html5shiv.min.js}"></script>
+    <script th:src="@{/js/respond.min.js}"></script>
+    <![endif]-->
+</head>
+<body class="no-skin">
+<div class="navbar" id="navbar">
+    <div class="navbar-container" id="navbar-container">
+        <!-- #section:basics/sidebar.mobile.toggle -->
+        <button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+            <span class="sr-only">Toggle sidebar</span>
+
+            <span class="icon-bar"></span>
+
+            <span class="icon-bar"></span>
+
+            <span class="icon-bar"></span>
+        </button>
+
+        <div class="navbar-header pull-left">
+            <!-- #section:basics/navbar.layout.brand -->
+            <a href="#" class="navbar-brand">
+                <small>
+                    <i class="fa fa-wrench"></i>
+                    Elab主页控制台
+                </small>
+            </a>
+
+            <!-- /section:basics/navbar.layout.brand -->
+
+            <!-- #section:basics/navbar.toggle -->
+
+            <!-- /section:basics/navbar.toggle -->
+        </div>
+
+        <!-- #section:basics/navbar.dropdown -->
+        <div class="navbar-buttons navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav" style="">
+                <!-- #section:basics/navbar.user_menu -->
+                <li class="light-blue">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <span class="user-info"><small>欢迎,</small>
+									 <span sec:authentication="name"></span>
+                            </span>
+                        <i class="ace-icon fa fa-caret-down"></i>
+                    </a>
+
+                    <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        <li>
+                            <a href="#" id="btnChangePassword">
+                                <i class="ace-icon fa fa-user"></i>
+                                修改密码
+                            </a>
+                        </li>
+
+                        <li class="divider"></li>
+
+                        <li>
+                            <a href="javascript:$('#logoutForm').submit()">
+                                <i class="ace-icon fa fa-power-off"></i>
+                                注销
+                            </a>
+                            <form id="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+                                <input type="submit" value="Sign Out"/>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- /section:basics/navbar.user_menu -->
+            </ul>
+        </div>
+
+        <!-- /section:basics/navbar.dropdown -->
+    </div>
+</div>
+
+<div class="main-container" id="main-container">
+    <div class="sidebar responsive " id="sidebar"  data-auto-hide="true">
+        <!-- sidebar goes here -->
+        <ul class="nav nav-list">
+            <li>
+                <a data-url="welcome" href="#welcome">
+                    <i class="menu-icon fa fa-home"></i>
+                    <span class="menu-text">首页</span>
+                    <!-- arrow down icon if there's a submenu -->
+                </a>
+                <b class="arrow"></b>
+            </li>
+
+            <li>
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-gear"></i>
+                    <span class="menu-text">系统管理</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                    <!-- arrow down icon if there's a submenu -->
+                </a>
+                <b class="arrow"></b>
+                <!-- optional arrow for minimized menu & hover submenu -->
+
+                <ul class="submenu">
+                    <!-- second level item -->
+                    <li>
+                        <a data-url="listOrder" href="#listOrder">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            订单管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <!-- second level item -->
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <a data-url="listStore" href="#listStore">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            门店管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <!-- second level item -->
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <a data-url="listUser" href="#listUser">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            后台用户管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <!-- second level item -->
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <a data-url="listCharacter?r=00" href="#listCharacter?r=00">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            区域经理管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                    <!-- second level item -->
+                    <li sec:authorize="hasRole('ADMIN')">
+                        <a data-url="listCharacter?r=01" href="#listCharacter?r=01">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            维修师傅管理
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+
+                </ul>
+            </li>
+
+        </ul>
+
+        <div data-target="#sidebar" id="sidebar-collapse" class="sidebar-toggle sidebar-collapse">
+            <i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left"
+               data-icon2="ace-icon fa fa-angle-double-right"></i>
+        </div>
+    </div><!-- /.sidebar -->
+
+    <div class="main-content">
+        <div class="breadcrumbs">
+            <!-- breadcrumbs goes here -->
+            <div id="breadcrumbs" class="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <!--<a href="#welcome">首页</a>-->
+                    </li>
+                </ul><!-- /.breadcrumb -->
+            </div>
+        </div>
+
+        <div class="page-content">
+            <!-- setting box goes here if needed -->
+            <div class="page-content-area">
+                <!-- ajax content goes here -->
+            </div><!-- /.page-content-area -->
+
+        </div><!-- /.page-content -->
+    </div><!-- /.main-content -->
+
+    <!-- footer area -->
+
+</div><!-- /.main-container -->
+
+<!-- list of script files -->
+
+<!--[if !IE]> -->
+<script th:src="@{/js/jquery.js}"></script>
+<!-- <![endif]-->
+<!--[if lte IE 9]>
+<script th:src="@{/js/jquery1x.js}"></script>
+<![endif]-->
+
+<script th:src="@{/js/bootstrap.js}"></script>
+
+<!--Plugin-->
+<script th:src="@{/js/dataTables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/js/dataTables/jquery.dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/js/bootbox.min.js}"></script>
+<script th:src="@{/js/jquery.serializejson.min.js}"></script>
+<script th:src="@{/js/jquery.validate.min.js }"></script>
+<script th:src="@{/js/additional-methods.min.js }"></script>
+<script th:src="@{/js/zTree/jquery.ztree.core.min.js}"></script>
+<script th:src="@{/js/zTree/jquery.ztree.excheck.min.js}"></script>
+<script th:src="@{/js/date-time/bootstrap-datepicker.min.js}"></script>
+
+<script th:src="@{/js/ace.min.js}"></script>
+
+<script th:src="@{/js/repair.js}"></script>
+
+<script type="text/javascript">
+    //If page has any inline scripts, it goes here
+    jQuery(function ($) {
+        $('.page-content-area').ace_ajax({
+            content_url: function (hash) {
+                //hash is the value from document url hash
+                //take "url" param and return the relevant url to load
+                return hash;
+            },
+            default_url: 'welcome'//default url
+        });
+
+        $("#btnChangePassword").on("click", function (e) {
+            e.preventDefault();
+
+            var dialog = formDialog({
+                title: '修改密码',
+                detailAjaxOptions: {
+                    url: "/changePassword"
+                },
+                saveBtnCallback: function () {
+                    if (!$("#formChangePassword").valid()) {
+                        return false;
+                    }
+                    var data = JSON.stringify(dialog.find('.bootbox-body').find("form").serializeJSON());
+                    var btnSaveIcon = $("[data-bb-handler=save] i");
+                    btnSaveIcon.removeClass("fa-check");
+                    btnSaveIcon.addClass("fa-spin fa-spinner");
+                    $("#formChangePassword input").prop("disabled", "disabled");
+                    $.ajax({
+                        type: "post",
+                        url: "/saveChangePassword",
+                        contentType: "application/json",
+                        data: data
+                    })
+                        .always(function () {
+                            btnSaveIcon.removeClass("fa-spin fa-spinner");
+                            btnSaveIcon.addClass("fa-check");
+                            $("#formChangePassword input").removeAttr("disabled");
+
+                        })
+                        .done(function (res) {
+                            alertMsg(res.msg);
+                            if (res.success) {
+                                dialog.modal('hide');
+                            }
+                        })
+                        .fail(alertError);
+
+                    return false;
+                },
+            });
+        });
+    });
+
+</script>
+
+</body>
+</html>
