@@ -25,6 +25,7 @@ public class UserService {
         this.encoder = encoder;
     }
 
+
     public JSONObject changePassword(ChangePasswordDto changePasswordDto) {
         JSONObject json = new JSONObject();
 
@@ -55,5 +56,4 @@ public class UserService {
         json.put("msg", "密码修改成功");
         return json;
     }
-
 }

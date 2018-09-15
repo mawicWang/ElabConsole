@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播配置</title>
+</head>
+<body>
+<div class="row">
+    <p class="col-xs-12">
+        <button id="btnAddBanner" class="btn btn-success">新增轮播图</button>
+    </p>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="bannerTable" class="table table-bordered table-hover ">
+                <thead>
+                <tr>
+                    <th>文字</th>
+                    <th>图片</th>
+                    <th>链接</th>
+                    <th>顺序</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row,iterStat : ${listBanner}">
+                    <td th:text="${row.text}"></td>
+                    <td th:text="${row.image}"></td>
+                    <td th:text="${row.url}"></td>
+                    <td th:text="${row.order}"></td>
+                    <td th:text="${row.comment}"></td>
+                    <td>
+                        <p>
+                            <button class="btn btn-white btn-warning btn-round tooltip-error btnCopyUrl"
+                                    title="复制链接" data-toggle="tooltip" data-placement="right"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-copy bigger-120 icon-only"></i>
+                            </button>
+
+                            <button class="btn btn-white btn-info btn-round btnModifyBanner"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-pencil bigger-120 icon-only"></i>
+                            </button>
+
+
+                            <button class="btn btn-white btn-danger btn-round btnDeleteBanner"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-trash-o bigger-120 icon-only"></i>
+                            </button>
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(".btnCopyUrl").tooltip({
+        delay: {show: 500}
+    });
+    $("#btnAddBanner").on('click', detailBanner);
+    $(".btnModifyBanner").on('click', detailBanner);
+    $(".btnDeleteBanner").on('click', deleteBanner);
+    $(".btnCopyUrl").on('click', copyUrl);
+
+    $("#bannerTable").dataTable();
+
+
+    function detailBanner(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var dialog = formDialog({
+            title: "轮播图片",
+            saveAction: "/saveBanner",
+            detailAjaxOptions: {
+                url: "/detailBanner",
+                data: {
+                    id: id
+                }
+            }
+        });
+    }
+
+    function deleteBanner(e) {
+        e.preventDefault();
+        var data = {
+            id: $(this).data("id"),
+        };
+
+        simpleConfirm({
+            title: "删除？",
+            message: "警告！确认删除该轮播图片吗？",
+            confirmAjaxOptions: {
+                url: "/deleteBanner",
+                data: data
+            },
+            saveDone: function (res) {
+                alertMsgWithCallback(res, refreshHome)
+            }
+        });
+    }
+
+    function copyUrl(e) {
+        e.preventDefault();
+        alertMsg("链接已复制到粘贴板")
+    }
+</script>
+</body>
+</html>

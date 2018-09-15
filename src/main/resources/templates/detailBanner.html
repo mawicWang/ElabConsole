@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>--</title>
+</head>
+<body>
+<form th:action="@{/saveBanner}" class="form-horizontal" role="form" th:object="${banner}">
+
+    <input type="hidden" name="id" th:field="*{id}">
+
+    <!-- #section:elements.form -->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="text"> 文字 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="text" class="col-xs-10 col-sm-8" th:field="*{text}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="image"> 图片 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="image" class="col-xs-10 col-sm-8" th:field="*{image}" disabled="disabled"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="order"> 顺序 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="order" class="col-xs-10 col-sm-8" th:field="*{order}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="url"> 链接 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="url" class="col-xs-10 col-sm-8" th:field="*{url}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="comment"> 备注 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="comment" class="col-xs-10 col-sm-8" th:field="*{comment}"/>
+        </div>
+    </div>
+
+</form>
+</body>
+</html>

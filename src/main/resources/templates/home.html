@@ -138,45 +138,36 @@
                 <ul class="submenu">
                     <!-- second level item -->
                     <li>
-                        <a data-url="listOrder" href="#listOrder">
+                        <a data-url="listBanner" href="#listBanner">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            订单管理
+                            轮播配置
                         </a>
                         <b class="arrow"></b>
                     </li>
 
                     <!-- second level item -->
                     <li sec:authorize="hasRole('ADMIN')">
-                        <a data-url="listStore" href="#listStore">
+                        <a data-url="listCategory1" href="#listCategory1">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            门店管理
+                            一级分类
                         </a>
                         <b class="arrow"></b>
                     </li>
 
                     <!-- second level item -->
                     <li sec:authorize="hasRole('ADMIN')">
-                        <a data-url="listUser" href="#listUser">
+                        <a data-url="listWork" href="#listWork">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            后台用户管理
+                            作品配置
                         </a>
                         <b class="arrow"></b>
                     </li>
 
                     <!-- second level item -->
-                    <li sec:authorize="hasRole('ADMIN')">
-                        <a data-url="listCharacter?r=00" href="#listCharacter?r=00">
+                    <li>
+                        <a data-url="listJob" href="#listJob">
                             <i class="menu-icon fa fa-caret-right"></i>
-                            区域经理管理
-                        </a>
-                        <b class="arrow"></b>
-                    </li>
-
-                    <!-- second level item -->
-                    <li sec:authorize="hasRole('ADMIN')">
-                        <a data-url="listCharacter?r=01" href="#listCharacter?r=01">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            维修师傅管理
+                            招聘信息
                         </a>
                         <b class="arrow"></b>
                     </li>

@@ -27,5 +27,4 @@ public class UserController {
     public JSONObject changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
         return userService.changePassword(changePasswordDto);
     }
-
 }
