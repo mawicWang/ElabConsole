@@ -19,10 +19,10 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="image"> 图片 </label>
+        <label class="col-sm-3 control-label no-padding-right" for="imageFile"> 图片 </label>
 
         <div class="col-sm-9">
-            <input type="text" id="image" class="col-xs-10 col-sm-8" th:field="*{image}" disabled="disabled"/>
+            <input type="file" id="imageFile" class="col-xs-10 col-sm-8" th:field="*{imageFile}"/>
         </div>
     </div>
 
@@ -51,5 +51,8 @@
     </div>
 
 </form>
+<script>
+    $('#imageFile').ace_file_input();
+</script>
 </body>
 </html>

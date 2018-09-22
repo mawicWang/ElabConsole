@@ -29,7 +29,7 @@ public class BaseResponse {
 
     private BaseResponse(Object result) {
         this.resultCode = SUCCESS;
-        this.resultMessage = null;
+        this.resultMessage = "";
         this.result = result;
     }
 

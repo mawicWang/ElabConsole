@@ -19,7 +19,7 @@ public class RestControllerAdvice {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public BaseResponse handleException(Exception e) {
-        LOGGER.info("handling Exception {}, {}", e.getClass(), e.getMessage());
+        LOGGER.info("REST 调用异常 {}, {}", e.getClass(), e.getMessage());
         LOGGER.error(e);
         return BaseResponse.fail(e.toString());
     }
@@ -30,7 +30,7 @@ public class RestControllerAdvice {
     public BaseResponse handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
-        StringBuilder errorMessage = new StringBuilder("Invalid Request:");
+        StringBuilder errorMessage = new StringBuilder("请求参数无效:");
 
         for (FieldError fieldError : bindingResult.getFieldErrors())
             errorMessage.append(fieldError.getDefaultMessage()).append(", ");
@@ -47,6 +47,6 @@ public class RestControllerAdvice {
     public BaseResponse handleHttpMessageNotReadableException(
             HttpMessageNotReadableException ex) {
         LOGGER.error(ex);
-        return BaseResponse.fail("json convert failure!");
+        return BaseResponse.fail("json 转换失败!");
     }
 }

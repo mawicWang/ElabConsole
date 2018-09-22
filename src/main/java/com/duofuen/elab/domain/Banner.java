@@ -8,12 +8,23 @@ public class Banner {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String text;
-    private byte[] image;
-    @Column(name="`order`")
-    private Integer order;
+    private String name;
+    private Integer image;
+    private Integer priority;
     private String comment;
     private String url;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image", insertable = false, updatable = false)
+    private Image imageRef;
+
+    public Image getImageRef() {
+        return imageRef;
+    }
+
+    public void setImageRef(Image imageRef) {
+        this.imageRef = imageRef;
+    }
 
     public Integer getId() {
         return id;
@@ -23,28 +34,28 @@ public class Banner {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getName() {
+        return name;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public byte[] getImage() {
+    public Integer getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(Integer image) {
         this.image = image;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getPriority() {
+        return priority;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public String getComment() {

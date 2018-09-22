@@ -1,6 +1,7 @@
 package com.duofuen.elab.web;
 
 import com.duofuen.elab.domain.Banner;
+import com.duofuen.elab.dto.BannerDto;
 import com.duofuen.elab.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.transaction.Transactional;
+import java.io.File;
 
 @Controller
 public class BannerController {
@@ -29,7 +31,9 @@ public class BannerController {
 
     @RequestMapping("/detailBanner")
     public String detailBanner(Integer id, Model model) {
-        model.addAttribute("banner", bannerService.findById(id));
+        Banner banner = bannerService.findById(id);
+        BannerDto bannerDto = new BannerDto(banner) ;
+        model.addAttribute("banner", bannerDto);
         return "detailBanner";
     }
 
@@ -37,7 +41,9 @@ public class BannerController {
     @Transactional
     @RequestMapping("/saveBanner")
     @ResponseBody
-    public String saveBanner(@RequestBody Banner banner) {
+    public String saveBanner(@RequestBody BannerDto banner) {
+        File imageFile = banner.getImageFile();
+
         bannerService.save(banner);
         return "success";
     }

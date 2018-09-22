@@ -1,42 +1,51 @@
 package com.duofuen.elab.rest;
 
+import com.duofuen.elab.domain.Image;
+import com.duofuen.elab.domain.ImageRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.duofuen.elab.util.Const.Rest.ROOT_PATH;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(path = ROOT_PATH)
+@RequestMapping()
 public class ImageController {
-//    private static final Logger LOGGER = LogManager.getLogger();
-//
-//    private final ImageRepository imageRepository;
-//
-//    @Autowired
-//    public ImageController(ImageRepository imageRepository) {
-//        this.imageRepository = imageRepository;
-//    }
-//
-//    @GetMapping(value = "/viewImage")
-//    public void viewImage(Integer id, HttpServletResponse response) throws IOException {
-//        LOGGER.info("==>restful method viewImage called, id: {}", id);
-//
-//        Optional<Image> image = imageRepository.findById(id);
-//        if (!image.isPresent()) {
-//            response.setStatus(404);
-//            response.setContentType("text/html;charset=utf8");
-//            response.getWriter().append("No Image Found");
-//            return;
-//        }
-//        byte[] data = image.get().getImageContent();
-//
-//        response.setContentType("image/" + image.get().getImageType());
-//        OutputStream stream = response.getOutputStream();
-//        stream.write(data);
-//        stream.flush();
-//        stream.close();
-//    }
-//
+    private static final Logger LOGGER = LogManager.getLogger();
+
+    private final ImageRepository imageRepository;
+
+    @Autowired
+    public ImageController(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
+    }
+
+    @GetMapping(value = "/img")
+    public void viewImage(Integer id, HttpServletResponse response) throws IOException {
+        LOGGER.info("==>restful method viewImage called, id: {}", id);
+
+        Optional<Image> image = imageRepository.findById(id);
+        if (!image.isPresent()) {
+            response.setStatus(404);
+            response.setContentType("text/plain;charset=utf8");
+            response.getWriter().append("No Image Found");
+            return;
+        }
+        byte[] data = image.get().getContent();
+
+        response.setContentType("image/" + image.get().getType());
+        OutputStream stream = response.getOutputStream();
+        stream.write(data);
+        stream.flush();
+        stream.close();
+    }
+
 //    @Transactional
 //    @PostMapping(value = "/uploadImage")
 //    public BaseResponse uploadImage(@RequestBody Map<String, String> map) {

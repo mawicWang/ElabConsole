@@ -4,14 +4,14 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.2.RELEASE")
-//        classpath "org.hidetake:gradle-ssh-plugin:2.9.0"
+        classpath "org.hidetake:gradle-ssh-plugin:2.9.0"
 
     }
 }
 
-//plugins {
-//    id "org.hidetake.ssh" version "2.9.0"
-//}
+plugins {
+    id "org.hidetake.ssh" version "2.9.0"
+}
 
 group 'com.duofuen'
 version '1.0-SNAPSHOT'
@@ -20,7 +20,7 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-//apply plugin: 'org.hidetake.ssh'
+apply plugin: 'org.hidetake.ssh'
 
 
 
@@ -52,35 +52,37 @@ dependencies {
 }
 
 
-//remotes {
-//    webServer {
-//        host = '47.101.39.28'
-//        port = 22
-//        user = 'root'
-//        password = 'Sjgtongji126'
-//    }
-//}
-//
-//task deploy(dependsOn:bootJar) {
-//    doLast {
-//        ssh.run {
-//            session(remotes.webServer) {
-//                println 'start deploy'
-//                put from: buildDir.toString() + '/libs/repairWeb-1.0-SNAPSHOT.jar', into: '/var/www/'
-//                println 'deploy done'
-//                println 'start web'
-//                execute '/var/www/boot.sh restart'
-//            }
-//        }
-//    }
-//}
+remotes {
+    webServer {
+//        host = '47.101.164.238'
+        host = '106.14.225.13'
+        port = 22
+        user = 'root'
+//        password = '!QAZ2wsx'
+        password = 'aqHM2dAUg6bi'
+    }
+}
 
-//task start() {
-//    doLast {
-//        ssh.run {
-//            session(remotes.webServer) {
-//                execute '/var/www/boot.sh start'
-//            }
-//        }
-//    }
-//}
+task deploy(dependsOn:bootJar) {
+    doLast {
+        ssh.run {
+            session(remotes.webServer) {
+                println 'start deploy'
+                put from: buildDir.toString() + '/libs/elab-web-1.0-SNAPSHOT.jar', into: '/var/www/'
+                println 'deploy done'
+                println 'start web'
+                execute '/var/www/boot.sh restart'
+            }
+        }
+    }
+}
+
+task start() {
+    doLast {
+        ssh.run {
+            session(remotes.webServer) {
+                execute '/var/www/boot.sh start'
+            }
+        }
+    }
+}

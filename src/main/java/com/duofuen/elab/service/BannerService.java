@@ -34,9 +34,6 @@ public class BannerService {
     }
 
     public void save(Banner banner) {
-        if (banner.getImage() == null) {
-            banner.setImage(new byte[]{0, 1, 2, 31, 2, 51, 21, 45, 12});
-        }
         bannerRepository.save(banner);
     }
 
