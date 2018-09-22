@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>招聘信息</title>
+</head>
+<body>
+<div class="row">
+    <p class="col-xs-12">
+        <button id="btnAddJob" class="btn btn-success">新增招聘信息</button>
+    </p>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="jobTable" class="table table-bordered table-hover ">
+                <thead>
+                <tr>
+                    <th>职位</th>
+                    <th>人数</th>
+                    <th>公司</th>
+                    <th>地点</th>
+                    <th>更新时间</th>
+                    <th>优先级</th>
+                    <th>职位要求</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row,iterStat : ${listJob}">
+                    <td th:text="${row.postion}"></td>
+                    <td th:text="${row.number}"></td>
+                    <td th:text="${row.company}"></td>
+                    <td th:text="${row.locaton}"></td>
+                    <td th:text="${row.updateTime}"></td>
+                    <td th:text="${row.priority}"></td>
+                    <td class="row_jd" th:text="${row.description}"></td>
+                    <td>
+                        <p>
+                            <button class="btn btn-white btn-info btn-round btnModifyJob"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-pencil bigger-120 icon-only"></i>
+                            </button>
+
+
+                            <button class="btn btn-white btn-danger btn-round btnDeleteJob"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-trash-o bigger-120 icon-only"></i>
+                            </button>
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    $("#btnAddJob").on('click', detailJob);
+    $(".btnModifyJob").on('click', detailJob);
+    $(".btnDeleteJob").on('click', deleteJob);
+
+    $("#jobTable").dataTable();
+    $.each($(".row_jd"), function () {
+        console.log($(this).html())
+
+        $(this).html($(this).html().replace(/(?:\r\n|\r|\n)/g, '<br>'));
+
+    });
+
+    function detailJob(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var dialog = formDialog({
+            title: "招聘信息",
+            saveAction: "/saveJob",
+            detailAjaxOptions: {
+                url: "/detailJob",
+                data: {
+                    id: id
+                }
+            }
+        });
+    }
+
+    function deleteJob(e) {
+        e.preventDefault();
+        var data = {
+            id: $(this).data("id"),
+        };
+
+        simpleConfirm({
+            title: "删除？",
+            message: "警告！确认删除该招聘信息吗？",
+            confirmAjaxOptions: {
+                url: "/deleteJob",
+                data: data
+            },
+            saveDone: function (res) {
+                alertMsgWithCallback(res, refreshHome)
+            }
+        });
+    }
+</script>
+</body>
+</html>

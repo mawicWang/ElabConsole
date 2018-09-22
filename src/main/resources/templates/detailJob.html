@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>--</title>
+</head>
+<body>
+<form th:action="@{/saveJob}" class="form-horizontal" role="form" th:object="${job}" enctype="multipart/form-data">
+
+    <input type="hidden" name="id" th:field="*{id}">
+
+    <!-- #section:elements.form -->
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="position"> 职位 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="position" class="col-xs-10 col-sm-8" th:field="*{postion}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="number"> 人数 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="number" class="col-xs-10 col-sm-8" th:field="*{number}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="company"> 公司 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="company" class="col-xs-10 col-sm-8" th:field="*{company}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="locaton"> 地点 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="locaton" class="col-xs-10 col-sm-8" th:field="*{locaton}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="description"> 职位要求 </label>
+
+        <div class="col-sm-9">
+            <textarea id="description" class="col-xs-10 col-sm-8" th:field="*{description}"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="priority"> 优先级 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="priority" class="col-xs-10 col-sm-8" th:field="*{priority}"/>
+        </div>
+    </div>
+</form>
+<script>
+    autosize($("#description"));
+</script>
+</body>
+</html>
