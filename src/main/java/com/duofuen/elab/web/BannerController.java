@@ -1,26 +1,32 @@
 package com.duofuen.elab.web;
 
 import com.duofuen.elab.domain.Banner;
+import com.duofuen.elab.domain.Image;
+import com.duofuen.elab.domain.ImageRepository;
 import com.duofuen.elab.dto.BannerDto;
 import com.duofuen.elab.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.File;
+import java.io.IOException;
 
 @Controller
 public class BannerController {
 
     private final BannerService bannerService;
+    private final ImageRepository imageRepository;
 
     @Autowired
-    public BannerController(BannerService bannerService) {
+    public BannerController(BannerService bannerService, ImageRepository imageRepository) {
         this.bannerService = bannerService;
+        this.imageRepository = imageRepository;
     }
 
     @RequestMapping("/listBanner")
@@ -32,19 +38,40 @@ public class BannerController {
     @RequestMapping("/detailBanner")
     public String detailBanner(Integer id, Model model) {
         Banner banner = bannerService.findById(id);
-        BannerDto bannerDto = new BannerDto(banner) ;
+        BannerDto bannerDto = new BannerDto(banner);
         model.addAttribute("banner", bannerDto);
+        model.addAttribute("imageFile", null);
         return "detailBanner";
     }
 
 
     @Transactional
-    @RequestMapping("/saveBanner")
+    @PostMapping(path = "/saveBanner")
     @ResponseBody
-    public String saveBanner(@RequestBody BannerDto banner) {
-        File imageFile = banner.getImageFile();
+    public String saveBanner(@ModelAttribute BannerDto banner) throws IOException {
+        MultipartFile imageFile = banner.getImageFile();
 
-        bannerService.save(banner);
+        Integer imageId = banner.getImage();
+        if (imageFile != null) {
+            String fullName = imageFile.getOriginalFilename();
+            int suffixIdx = fullName.lastIndexOf('.');
+            String suffix = fullName.substring(suffixIdx + 1);
+
+            Image image = new Image();
+            image.setType(suffix);
+            image.setContent(imageFile.getBytes());
+            imageId = imageRepository.save(image).getId();
+        }
+
+        Banner b = new Banner();
+        b.setId(banner.getId());
+        b.setName(banner.getName());
+        b.setComment(banner.getComment());
+        b.setPriority(banner.getPriority());
+        b.setUrl(banner.getUrl());
+        b.setImage(imageId);
+
+        bannerService.save(b);
         return "success";
     }
 

@@ -1,12 +1,14 @@
 package com.duofuen.elab.dto;
 
 import com.duofuen.elab.domain.Banner;
-
-import java.io.File;
+import org.springframework.web.multipart.MultipartFile;
 
 public class BannerDto extends Banner {
 
-    private File imageFile;
+    private MultipartFile imageFile;
+
+    public BannerDto() {
+    }
 
     public BannerDto(Banner banner) {
         this.setId(banner.getId());
@@ -14,13 +16,15 @@ public class BannerDto extends Banner {
         this.setComment(banner.getComment());
         this.setPriority(banner.getPriority());
         this.setUrl(banner.getUrl());
+        this.setImage(banner.getImage());
     }
 
-    public File getImageFile() {
+    public MultipartFile getImageFile() {
         return imageFile;
     }
 
-    public void setImageFile(File imageFile) {
+    public void setImageFile(MultipartFile imageFile) {
         this.imageFile = imageFile;
     }
+
 }

@@ -44,7 +44,7 @@ public class RestController {
             rbb.setName(b.getName());
             rbb.setUrl(b.getUrl());
             rbb.setComment(b.getComment());
-            rbb.setUrl(buildImageUrl(b.getImage()));
+            rbb.setImage(buildImageUrl(b.getImage()));
             listRbBanner.getList().add(rbb);
         }
 

@@ -18,23 +18,23 @@
                     <th>文字</th>
                     <th>图片</th>
                     <th>链接</th>
-                    <th>顺序</th>
+                    <th>优先级</th>
                     <th>备注</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="row,iterStat : ${listBanner}">
-                    <td th:text="${row.text}"></td>
-                    <td th:text="${row.image}"></td>
+                    <td th:text="${row.name}"></td>
+                    <td><a th:target="view_window" th:text="预览" th:href="'/img?id='+${row.image}"></a></td>
                     <td th:text="${row.url}"></td>
-                    <td th:text="${row.order}"></td>
+                    <td th:text="${row.priority}"></td>
                     <td th:text="${row.comment}"></td>
                     <td>
                         <p>
                             <button class="btn btn-white btn-warning btn-round tooltip-error btnCopyUrl"
                                     title="复制链接" data-toggle="tooltip" data-placement="right"
-                                    th:data-id="${row.id}">
+                                    th:data-id="${row.id}" th:data-url="${row.url}">
                                 <i class="ace-icon fa fa-copy bigger-120 icon-only"></i>
                             </button>
 
@@ -59,7 +59,7 @@
 </div>
 <script>
     $(".btnCopyUrl").tooltip({
-        delay: {show: 500}
+        delay: {show: 300}
     });
     $("#btnAddBanner").on('click', detailBanner);
     $(".btnModifyBanner").on('click', detailBanner);
@@ -74,12 +74,28 @@
         var id = $(this).data("id");
         var dialog = formDialog({
             title: "轮播图片",
-            saveAction: "/saveBanner",
+            // saveAction: "/saveBanner",
             detailAjaxOptions: {
                 url: "/detailBanner",
                 data: {
                     id: id
                 }
+            },
+            saveBtnCallback: function () {
+                startLoad();
+                $.ajax({
+                    type: "post",
+                    url: "/saveBanner",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: new FormData(dialog.find('.bootbox-body').find("form")[0]),
+                })
+                    .always(stopLoad)
+                    .done(refreshHome)
+                    .fail(alertError);
+
+                return true;
             }
         });
     }
@@ -105,6 +121,17 @@
 
     function copyUrl(e) {
         e.preventDefault();
+        var url = $(this).data("url");
+        var input = document.createElement('input');
+        document.body.appendChild(input);
+        input.setAttribute('value', url);
+        input.select();
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            console.log('复制成功');
+        }
+        document.body.removeChild(input);
+
         alertMsg("链接已复制到粘贴板")
     }
 </script>
