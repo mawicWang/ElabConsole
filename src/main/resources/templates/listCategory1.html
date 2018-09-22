@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>作品分类</title>
+</head>
+<body>
+<div class="row">
+    <p class="col-xs-12">
+        <button id="btnAddCategory1" class="btn btn-success">新增分类</button>
+    </p>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="category1Table" class="table table-bordered table-hover ">
+                <thead>
+                <tr>
+                    <th>标题文字</th>
+                    <th>中文</th>
+                    <th>英文</th>
+                    <th>图1</th>
+                    <th>图2</th>
+                    <th>备注</th>
+                    <th>优先级</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row,iterStat : ${listCategory1}">
+                    <td th:text="${row.textTitle}"></td>
+                    <td th:text="${row.textCn}"></td>
+                    <td th:text="${row.textEn}"></td>
+                    <td><a th:target="view_window" th:text="预览" th:href="'/img?id='+${row.image1}"></a></td>
+                    <td><a th:target="view_window" th:text="预览" th:href="'/img?id='+${row.image2}"></a></td>
+                    <td th:text="${row.comment}"></td>
+                    <td th:text="${row.priority}"></td>
+                    <td>
+                        <p>
+                            <a class="btn btn-white btn-warning btn-round tooltip-error btnCategory2"
+                               title="二级分类" data-toggle="tooltip" data-placement="right"
+                               target="view_window" data-url="listCategory2" th:href="'#listCategory2?category1Id='+${row.id}"
+                               th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-arrow-right bigger-120 icon-only"></i>
+                            </a>
+
+                            <button class="btn btn-white btn-info btn-round btnModifyCategory1"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-pencil bigger-120 icon-only"></i>
+                            </button>
+
+
+                            <button class="btn btn-white btn-danger btn-round btnDeleteCategory1"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-trash-o bigger-120 icon-only"></i>
+                            </button>
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(".btnCategory2").tooltip({
+        delay: {show: 500}
+    });
+    $("#btnAddCategory1").on('click', detailCategory1);
+    $(".btnModifyCategory1").on('click', detailCategory1);
+    $(".btnDeleteCategory1").on('click', deleteCategory1);
+
+    $("#category1Table").dataTable();
+
+
+    function detailCategory1(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var dialog = formDialog({
+            title: "一级分类",
+            detailAjaxOptions: {
+                url: "/detailCategory1",
+                data: {
+                    id: id
+                }
+            },
+            saveBtnCallback: function () {
+                startLoad();
+                $.ajax({
+                    type: "post",
+                    url: "/saveCategory1",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: new FormData(dialog.find('.bootbox-body').find("form")[0]),
+                })
+                    .always(stopLoad)
+                    .done(refreshHome)
+                    .fail(alertError);
+
+                return true;
+            }
+        });
+    }
+
+    function deleteCategory1(e) {
+        e.preventDefault();
+        var data = {
+            id: $(this).data("id"),
+        };
+
+        simpleConfirm({
+            title: "删除？",
+            message: "警告！确认删除该一级分类吗？",
+            confirmAjaxOptions: {
+                url: "/deleteCategory1",
+                data: data
+            },
+            saveDone: function (res) {
+                alertMsgWithCallback(res, refreshHome)
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

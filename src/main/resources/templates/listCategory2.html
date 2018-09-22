@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${category1.textCn}+':二级分类'"></title>
+</head>
+<body>
+<div class="row">
+    <p class="col-xs-12">
+        <button id="btnAddCategory2" class="btn btn-success">新增二级分类</button>
+    </p>
+    <input type="hidden" id="parent" th:value="${category1.id}">
+
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="category2Table" class="table table-bordered table-hover ">
+                <thead>
+                <tr>
+                    <th>文字</th>
+                    <th>地点</th>
+                    <th>链接</th>
+                    <th>备注</th>
+                    <th>优先级</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row,iterStat : ${listCategory2}">
+                    <td th:text="${row.name}"></td>
+                    <td th:text="${row.location}"></td>
+                    <td th:text="${row.url}"></td>
+                    <td th:text="${row.comment}"></td>
+                    <td th:text="${row.priority}"></td>
+                    <td>
+                        <p>
+                            <button class="btn btn-white btn-info btn-round btnModifyCategory2"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-pencil bigger-120 icon-only"></i>
+                            </button>
+
+
+                            <button class="btn btn-white btn-danger btn-round btnDeleteCategory2"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-trash-o bigger-120 icon-only"></i>
+                            </button>
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(".btnCategory2").tooltip({
+        delay: {show: 500}
+    });
+    $("#btnAddCategory2").on('click', detailCategory2);
+    $(".btnModifyCategory2").on('click', detailCategory2);
+    $(".btnDeleteCategory2").on('click', deleteCategory2);
+
+    $("#category2Table").dataTable();
+
+
+    function detailCategory2(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var parent = $("#parent").val()
+        var dialog = formDialog({
+            title: "招聘信息",
+            saveAction: "/saveCategory2",
+            detailAjaxOptions: {
+                url: "/detailCategory2",
+                data: {
+                    id: id,
+                    parent: parent
+                }
+            }
+        });
+    }
+
+    function deleteCategory2(e) {
+        e.preventDefault();
+        var data = {
+            id: $(this).data("id"),
+        };
+
+        simpleConfirm({
+            title: "删除？",
+            message: "警告！确认删除该二级分类吗？",
+            confirmAjaxOptions: {
+                url: "/deleteCategory2",
+                data: data
+            },
+            saveDone: function (res) {
+                alertMsgWithCallback(res, refreshHome)
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

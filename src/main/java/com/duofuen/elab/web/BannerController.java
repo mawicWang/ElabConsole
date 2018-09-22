@@ -1,10 +1,9 @@
 package com.duofuen.elab.web;
 
 import com.duofuen.elab.domain.Banner;
-import com.duofuen.elab.domain.Image;
-import com.duofuen.elab.domain.ImageRepository;
 import com.duofuen.elab.dto.BannerDto;
 import com.duofuen.elab.service.BannerService;
+import com.duofuen.elab.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,12 +20,12 @@ import java.io.IOException;
 public class BannerController {
 
     private final BannerService bannerService;
-    private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
     @Autowired
-    public BannerController(BannerService bannerService, ImageRepository imageRepository) {
+    public BannerController(BannerService bannerService, ImageService imageService) {
         this.bannerService = bannerService;
-        this.imageRepository = imageRepository;
+        this.imageService = imageService;
     }
 
     @RequestMapping("/listBanner")
@@ -40,7 +39,6 @@ public class BannerController {
         Banner banner = bannerService.findById(id);
         BannerDto bannerDto = new BannerDto(banner);
         model.addAttribute("banner", bannerDto);
-        model.addAttribute("imageFile", null);
         return "detailBanner";
     }
 
@@ -53,14 +51,7 @@ public class BannerController {
 
         Integer imageId = banner.getImage();
         if (imageFile != null) {
-            String fullName = imageFile.getOriginalFilename();
-            int suffixIdx = fullName.lastIndexOf('.');
-            String suffix = fullName.substring(suffixIdx + 1);
-
-            Image image = new Image();
-            image.setType(suffix);
-            image.setContent(imageFile.getBytes());
-            imageId = imageRepository.save(image).getId();
+            imageId = imageService.saveFromFile(imageFile).getId();
         }
 
         Banner b = new Banner();
