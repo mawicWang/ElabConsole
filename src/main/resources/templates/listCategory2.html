@@ -54,6 +54,11 @@
     </div>
 </div>
 <script>
+    $("ul.breadcrumb").empty();
+    $("ul.breadcrumb").append($("<li><i class=\"ace-icon fa fa-home home-icon\"></i></li><li><a href=\"/home\">系统管理</a></li>"))
+    $("ul.breadcrumb").append($("<li><a href='#listCategory1'> 一级分类 </a></li>"))
+    $("ul.breadcrumb").append($("<li class='active'> 二级分类 </li>"))
+
     $(".btnCategory2").tooltip({
         delay: {show: 500}
     });
