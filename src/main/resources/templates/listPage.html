@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>作品配置</title>
+</head>
+<body>
+<div class="row">
+    <p class="col-xs-12">
+        <button id="btnAddPage" class="btn btn-success">新增作品H5</button>
+    </p>
+    <span class="col-sm-8 text-danger">
+        *注意:目前只支持zip格式压缩包
+    </span>
+
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table id="pageTable" class="table table-bordered table-hover ">
+                <thead>
+                <tr>
+                    <th>备注</th>
+                    <th>链接</th>
+                    <th>文件名</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row,iterStat : ${listPage}">
+                    <td th:text="${row.comment}"></td>
+                    <td th:text="${row.url}"></td>
+                    <td th:text="${row.fileName}"></td>
+                    <td>
+                        <p>
+                            <button class="btn btn-white btn-warning btn-round tooltip-error btnCopyUrl"
+                                    title="复制链接" data-toggle="tooltip" data-placement="right"
+                                    th:data-id="${row.id}" th:data-url="${row.url}">
+                                <i class="ace-icon fa fa-copy bigger-120 icon-only"></i>
+                            </button>
+
+                            <button class="btn btn-white btn-info btn-round btnModifyPage"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-pencil bigger-120 icon-only"></i>
+                            </button>
+
+
+                            <button class="btn btn-white btn-danger btn-round btnDeletePage"
+                                    th:data-id="${row.id}">
+                                <i class="ace-icon fa fa-trash-o bigger-120 icon-only"></i>
+                            </button>
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(".btnCopyUrl").tooltip({
+        delay: {show: 300}
+    });
+    $("#btnAddPage").on('click', detailPage);
+    $(".btnModifyPage").on('click', detailPage);
+    $(".btnDeletePage").on('click', deletePage);
+    $(".btnCopyUrl").on('click', copyUrl);
+
+
+    $("#pageTable").dataTable();
+
+    function detailPage(e) {
+        e.preventDefault();
+        var id = $(this).data("id");
+        var dialog = formDialog({
+            title: "作品H5",
+            detailAjaxOptions: {
+                url: "/detailPage",
+                data: {
+                    id: id
+                }
+            },
+            saveBtnCallback: function () {
+                startLoad();
+                $.ajax({
+                    type: "post",
+                    url: "/savePage",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: new FormData(dialog.find('.bootbox-body').find("form")[0]),
+                })
+                    .always(stopLoad)
+                    .done(function (res) {
+                        alertMsgWithCallback(res, refreshHome)
+                    })
+                    .fail(alertError);
+
+                return true;
+            }
+        });
+    }
+
+    function deletePage(e) {
+        e.preventDefault();
+        var data = {
+            id: $(this).data("id"),
+        };
+
+        simpleConfirm({
+            title: "删除？",
+            message: "警告！确认删除该H5页面吗吗？",
+            confirmAjaxOptions: {
+                url: "/deletePage",
+                data: data
+            },
+            saveDone: function (res) {
+                alertMsgWithCallback(res, refreshHome)
+            }
+        });
+    }
+
+    function copyUrl(e) {
+        e.preventDefault();
+        var url = $(this).data("url");
+        var input = document.createElement('input');
+        document.body.appendChild(input);
+        input.setAttribute('value', url);
+        input.select();
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            console.log('复制成功');
+        }
+        document.body.removeChild(input);
+
+        alertMsg("链接已复制到粘贴板")
+    }
+</script>
+</body>
+</html>

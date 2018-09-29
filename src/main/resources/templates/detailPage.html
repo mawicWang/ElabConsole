@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>--</title>
+</head>
+<body>
+<form th:action="@{/savePage}" class="form-horizontal" role="form" th:object="${page}" enctype="multipart/form-data">
+
+    <input type="hidden" name="id" th:field="*{id}">
+    <input type="hidden" name="id" th:field="*{fileName}">
+    <input type="hidden" name="id" th:field="*{url}">
+
+    <!-- #section:elements.form -->
+    <div class="form-group" th:if="!*{id}">
+        <label class="col-sm-3 control-label no-padding-right" for="file"> 压缩包(.zip) </label>
+
+        <div class="col-sm-9">
+            <input type="file" id="file" class="col-xs-10 col-sm-8" th:field="*{file}"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right" for="comment"> 备注 </label>
+
+        <div class="col-sm-9">
+            <input type="text" id="comment" class="col-xs-10 col-sm-8" th:field="*{comment}"/>
+        </div>
+    </div>
+
+
+</form>
+<script>
+    $('#file').ace_file_input();
+</script>
+</body>
+</html>

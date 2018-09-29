@@ -32,12 +32,6 @@
                     <td th:text="${row.comment}"></td>
                     <td>
                         <p>
-                            <button class="btn btn-white btn-warning btn-round tooltip-error btnCopyUrl"
-                                    title="复制链接" data-toggle="tooltip" data-placement="right"
-                                    th:data-id="${row.id}" th:data-url="${row.url}">
-                                <i class="ace-icon fa fa-copy bigger-120 icon-only"></i>
-                            </button>
-
                             <button class="btn btn-white btn-info btn-round btnModifyBanner"
                                     th:data-id="${row.id}">
                                 <i class="ace-icon fa fa-pencil bigger-120 icon-only"></i>
@@ -58,13 +52,9 @@
     </div>
 </div>
 <script>
-    $(".btnCopyUrl").tooltip({
-        delay: {show: 500}
-    });
     $("#btnAddBanner").on('click', detailBanner);
     $(".btnModifyBanner").on('click', detailBanner);
     $(".btnDeleteBanner").on('click', deleteBanner);
-    $(".btnCopyUrl").on('click', copyUrl);
 
     $("#bannerTable").dataTable();
 
@@ -119,21 +109,6 @@
         });
     }
 
-    function copyUrl(e) {
-        e.preventDefault();
-        var url = $(this).data("url");
-        var input = document.createElement('input');
-        document.body.appendChild(input);
-        input.setAttribute('value', url);
-        input.select();
-        if (document.execCommand('copy')) {
-            document.execCommand('copy');
-            console.log('复制成功');
-        }
-        document.body.removeChild(input);
-
-        alertMsg("链接已复制到粘贴板")
-    }
 </script>
 </body>
 </html>
