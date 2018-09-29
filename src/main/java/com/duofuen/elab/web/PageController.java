@@ -92,7 +92,7 @@ public class PageController {
             return "删除失败！";
         }
         String folder = page.getUrl().replace("/home.html", "");
-        boolean deletedFile = pageService.deleteFile("/var/www" + folder);
+        boolean deletedFile = pageService.deleteFile("/var/www/html" + folder);
         if (!deletedFile) {
             return "删除文件失败";
         }

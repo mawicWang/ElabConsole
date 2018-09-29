@@ -65,7 +65,7 @@ public class PageService {
 
         InputStream fis = null;
 
-        String destDir = "/var/www/h5/" + md5 + "/";
+        String destDir = "/var/www/html/h5/" + md5 + "/";
         File dir = new File(destDir);
         if (!dir.exists()) {
             dir.mkdirs();
