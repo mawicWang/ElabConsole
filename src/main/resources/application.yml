@@ -14,5 +14,12 @@ spring:
     serialization:
       fail_on_empty_beans: false
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
 server:
   port : 8081
+
+
