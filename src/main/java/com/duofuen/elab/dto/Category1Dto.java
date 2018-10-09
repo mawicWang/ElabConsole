@@ -8,6 +8,9 @@ public class Category1Dto extends Category1 {
     private MultipartFile imageFile1;
     private MultipartFile imageFile2;
 
+    private String imageUrl1;
+    private String imageUrl2;
+
     public Category1Dto() {
     }
 
@@ -36,5 +39,21 @@ public class Category1Dto extends Category1 {
 
     public void setImageFile2(MultipartFile imageFile2) {
         this.imageFile2 = imageFile2;
+    }
+
+    public String getImageUrl1() {
+        return imageUrl1;
+    }
+
+    public void setImageUrl1(String imageUrl1) {
+        this.imageUrl1 = imageUrl1;
+    }
+
+    public String getImageUrl2() {
+        return imageUrl2;
+    }
+
+    public void setImageUrl2(String imageUrl2) {
+        this.imageUrl2 = imageUrl2;
     }
 }

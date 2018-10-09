@@ -2,6 +2,7 @@ package com.duofuen.elab.web;
 
 import com.duofuen.elab.domain.Category1;
 import com.duofuen.elab.domain.Category2;
+import com.duofuen.elab.domain.Image;
 import com.duofuen.elab.dto.Category1Dto;
 import com.duofuen.elab.service.CategoryService;
 import com.duofuen.elab.service.ImageService;
@@ -13,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class CategoryController {
@@ -28,7 +31,21 @@ public class CategoryController {
 
     @RequestMapping("/listCategory1")
     public String listCategory1(Model model) {
-        model.addAttribute("listCategory1", categoryService.findAll1());
+        Iterable<Category1>  iterCategory1 =  categoryService.findAll1();
+        List<Category1Dto> listCategory1Dto = new ArrayList<>();
+
+        for (Category1 c : iterCategory1) {
+            Category1Dto dto = new Category1Dto(c);
+            Image image1 = imageService.findById(c.getImage1());
+            Image image2 = imageService.findById(c.getImage2());
+
+            dto.setImageUrl1(image1.getUrl());
+            dto.setImageUrl2(image2.getUrl());
+            listCategory1Dto.add(dto);
+        }
+
+        model.addAttribute("listCategory1", listCategory1Dto);
+
         return "listCategory1";
     }
 
@@ -49,10 +66,13 @@ public class CategoryController {
         Integer imageId1 = category1Dto.getImage1();
         Integer imageId2 = category1Dto.getImage2();
         if (imageFile1 != null) {
-            imageId1 = imageService.saveFromFile(imageFile1).getId();
+//            imageId1 = imageService.saveFromFile(imageFile1).getId();
+            imageId1 = imageService.saveImageUrl(category1Dto.getImageUrl1()).getId();
         }
         if (imageFile2 != null) {
-            imageId2 = imageService.saveFromFile(imageFile2).getId();
+//            imageId2 = imageService.saveFromFile(imageFile2).getId();
+            imageId2 = imageService.saveImageUrl(category1Dto.getImageUrl2()).getId();
+
         }
 
         Category1 category1 = new Category1();

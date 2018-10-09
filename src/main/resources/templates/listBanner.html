@@ -100,7 +100,7 @@
                     }, function (res) {
                         console.log("complete:" + JSON.stringify(res));
                         var fileUrl = restUrl + res.key;
-                        $("#imageUrl").val(fileUrl);
+                        // $("#imageUrl").val(fileUrl);
                         formData.append("imageUrl", fileUrl);
                         $.ajax({
                             type: "post",
