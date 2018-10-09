@@ -1,6 +1,7 @@
 package com.duofuen.elab.web;
 
 import com.duofuen.elab.domain.Banner;
+import com.duofuen.elab.domain.Image;
 import com.duofuen.elab.dto.BannerDto;
 import com.duofuen.elab.service.BannerService;
 import com.duofuen.elab.service.ImageService;
@@ -15,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class BannerController {
@@ -30,7 +33,15 @@ public class BannerController {
 
     @RequestMapping("/listBanner")
     public String listCharacter(Model model) {
-        model.addAttribute("listBanner", bannerService.findAll());
+        Iterable<Banner> lBanner = bannerService.findAll();
+        List<BannerDto> listBannerDto = new ArrayList<>();
+        for (Banner b : lBanner) {
+            BannerDto dto = new BannerDto(b);
+            Image image = imageService.findById(b.getImage());
+            dto.setImageUrl(image.getUrl());
+            listBannerDto.add(dto);
+        }
+        model.addAttribute("listBannerDto", listBannerDto);
         return "listBanner";
     }
 
@@ -51,7 +62,8 @@ public class BannerController {
 
         Integer imageId = banner.getImage();
         if (imageFile != null) {
-            imageId = imageService.saveFromFile(imageFile).getId();
+            imageId = imageService.saveImageUrl(banner.getImageUrl()).getId();
+//            imageId = imageService.saveFromFile(imageFile).getId();
         }
 
         Banner b = new Banner();

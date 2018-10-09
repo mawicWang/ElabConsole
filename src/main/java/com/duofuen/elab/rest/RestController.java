@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.duofuen.elab.util.Const.Rest.ROOT_PATH;
 
@@ -119,6 +120,10 @@ public class RestController {
 
 
     private String buildImageUrl(Integer imageId) {
-        return "/img?id=" + imageId;
+        Optional<Image> image = imageRepository.findById(imageId);
+        if (image.isPresent()) {
+            return image.get().getUrl();
+        }
+        return "";
     }
 }

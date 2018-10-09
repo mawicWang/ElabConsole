@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class BannerDto extends Banner {
 
     private MultipartFile imageFile;
+    private String imageUrl;
 
     public BannerDto() {
     }
@@ -27,4 +28,11 @@ public class BannerDto extends Banner {
         this.imageFile = imageFile;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

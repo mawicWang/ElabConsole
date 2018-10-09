@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 public class ImageService {
@@ -28,5 +29,18 @@ public class ImageService {
         image.setContent(imageFile.getBytes());
 
         return imageRepository.save(image);
+    }
+
+    public Image saveImageUrl(String url) {
+        Image image = new Image();
+        image.setUrl(url);
+
+        return imageRepository.save(image);
+    }
+
+    public Image findById(Integer id) {
+        Optional<Image> image;
+        image = imageRepository.findById(id);
+        return image.orElseGet(Image::new);
     }
 }
