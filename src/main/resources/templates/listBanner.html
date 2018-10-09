@@ -24,9 +24,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="row,iterStat : ${listBanner}">
+                <tr th:each="row,iterStat : ${listBannerDto}">
                     <td th:text="${row.name}"></td>
-                    <td><a th:target="view_window" th:text="预览" th:href="'/img?id='+${row.image}"></a></td>
+                    <td><a th:target="view_window" th:text="预览" th:href="${row.imageUrl}"></a></td>
                     <td th:text="${row.url}"></td>
                     <td th:text="${row.priority}"></td>
                     <td th:text="${row.comment}"></td>
@@ -73,17 +73,49 @@
             },
             saveBtnCallback: function () {
                 startLoad();
+                var formData = new FormData(dialog.find('.bootbox-body').find("form")[0]);
                 $.ajax({
                     type: "post",
-                    url: "/saveBanner",
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    data: new FormData(dialog.find('.bootbox-body').find("form")[0]),
-                })
-                    .always(stopLoad)
-                    .done(refreshHome)
-                    .fail(alertError);
+                    url: "https://dm-api.elab-plus.cn/elab-marketing-file/upload/getUploadToken",
+                    data: {}
+                }).done(function (res) {
+                    var file = $("#imageFile")[0].files[0];
+                    var restUrl = res.single.resultUrl;
+                    var putExtra = {
+                        fname: "",
+                        params: {},
+                        mimeType: [] || null
+                    };
+                    var config = {
+                        useCdnDomain: true,
+                        disableStatisticsReport: false,
+                        retryCount: 6,
+                        region: qiniu.region.z0
+                    };
+                    var observable = qiniu.upload(file, file.name + "." + new Date().getTime(), res.single.token, putExtra, config);
+                    observable.subscribe(function (res) {
+                        console.log("next:" + JSON.stringify(res));
+                    }, function (res) {
+                        console.log("error:" + JSON.stringify(res));
+                    }, function (res) {
+                        console.log("complete:" + JSON.stringify(res));
+                        var fileUrl = restUrl + res.key;
+                        $("#imageUrl").val(fileUrl);
+                        formData.append("imageUrl", fileUrl);
+                        $.ajax({
+                            type: "post",
+                            url: "/saveBanner",
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                        })
+                            .always(stopLoad)
+                            .done(refreshHome)
+                            .fail(alertError);
+                    });
+                });
+
 
                 return true;
             }
