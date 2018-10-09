@@ -87,62 +87,77 @@
             saveBtnCallback: function () {
                 startLoad();
                 var formData = new FormData(dialog.find('.bootbox-body').find("form")[0]);
-                var file1 = $("#imageFile1")[0].files[0];
-                var file2 = $("#imageFile2")[0].files[0];
-                $.ajax({
-                    type: "post",
-                    url: "https://dm-api.elab-plus.cn/elab-marketing-file/upload/getUploadToken",
-                    data: {}
-                }).done(function (res) {
-                    var restUrl = res.single.resultUrl;
-                    var putExtra = {
-                        fname: "",
-                        params: {},
-                        mimeType: [] || null
-                    };
-                    var config = {
-                        useCdnDomain: true,
-                        disableStatisticsReport: false,
-                        retryCount: 6,
-                        region: qiniu.region.z0
-                    };
-                    var observable1 = qiniu.upload(file1, file1.name + "." + new Date().getTime(), res.single.token, putExtra, config);
-                    var observable2 = qiniu.upload(file2, file2.name + "." + new Date().getTime(), res.single.token, putExtra, config);
-                    observable1.subscribe(function (res) {
-                        console.log("next:" + JSON.stringify(res));
-                    }, function (res) {
-                        console.log("error:" + JSON.stringify(res));
-                    }, function (res) {
-                        console.log("complete:" + JSON.stringify(res));
-                        var fileUrl1 = restUrl + res.key;
-                        // $("#imageUrl1").val(fileUrl1);
-                        formData.append("imageUrl1", fileUrl1);
 
+                if (!$("#imageFile1")[0] || !$("#imageFile2")[0]) {
+                    $.ajax({
+                        type: "post",
+                        url: "/saveCategory1",
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData
+                    })
+                        .always(stopLoad)
+                        .done(refreshHome)
+                        .fail(alertError);
+                } else {
+                    var file1 = $("#imageFile1")[0].files[0];
+                    var file2 = $("#imageFile2")[0].files[0];
 
-
-                        observable2.subscribe(function (res) {
+                    $.ajax({
+                        type: "post",
+                        url: "https://dm-api.elab-plus.cn/elab-marketing-file/upload/getUploadToken",
+                        data: {}
+                    }).done(function (res) {
+                        var restUrl = res.single.resultUrl;
+                        var putExtra = {
+                            fname: "",
+                            params: {},
+                            mimeType: [] || null
+                        };
+                        var config = {
+                            useCdnDomain: true,
+                            disableStatisticsReport: false,
+                            retryCount: 6,
+                            region: qiniu.region.z0
+                        };
+                        var observable1 = qiniu.upload(file1, file1.name + "." + new Date().getTime(), res.single.token, putExtra, config);
+                        var observable2 = qiniu.upload(file2, file2.name + "." + new Date().getTime(), res.single.token, putExtra, config);
+                        observable1.subscribe(function (res) {
                             console.log("next:" + JSON.stringify(res));
                         }, function (res) {
                             console.log("error:" + JSON.stringify(res));
                         }, function (res) {
                             console.log("complete:" + JSON.stringify(res));
-                            var fileUrl2 = restUrl + res.key;
-                            // $("#imageUrl2").val(fileUrl2);
-                            formData.append("imageUrl2", fileUrl2);
-                            $.ajax({
-                                type: "post",
-                                url: "/saveCategory1",
-                                cache: false,
-                                contentType: false,
-                                processData: false,
-                                data: formData,
-                            })
-                                .always(stopLoad)
-                                .done(refreshHome)
-                                .fail(alertError);
+                            var fileUrl1 = restUrl + res.key;
+                            // $("#imageUrl1").val(fileUrl1);
+                            formData.append("imageUrl1", fileUrl1);
+
+
+                            observable2.subscribe(function (res) {
+                                console.log("next:" + JSON.stringify(res));
+                            }, function (res) {
+                                console.log("error:" + JSON.stringify(res));
+                            }, function (res) {
+                                console.log("complete:" + JSON.stringify(res));
+                                var fileUrl2 = restUrl + res.key;
+                                // $("#imageUrl2").val(fileUrl2);
+                                formData.append("imageUrl2", fileUrl2);
+                                $.ajax({
+                                    type: "post",
+                                    url: "/saveCategory1",
+                                    cache: false,
+                                    contentType: false,
+                                    processData: false,
+                                    data: formData,
+                                })
+                                    .always(stopLoad)
+                                    .done(refreshHome)
+                                    .fail(alertError);
+                            });
                         });
                     });
-                });
+                }
 
                 return true;
             }
